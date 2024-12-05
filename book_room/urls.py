@@ -17,6 +17,13 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
+from rest_framework.routers import DefaultRouter
+
+from location.views import LocationViewSet
+
+default_router = DefaultRouter()
+default_router.register('api/location', LocationViewSet, 'location')
+
 urlpatterns = [
     path('admin/', admin.site.urls),
-]
+] + default_router.urls
