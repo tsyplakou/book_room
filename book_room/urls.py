@@ -22,6 +22,7 @@ from rest_framework.routers import DefaultRouter
 from location.views import LocationViewSet
 from room.views import RoomViewSet
 from room_booking.views import BookingViewSet
+from user.views import UserRegisterView, UserLoginView, UserLogoutView
 
 default_router = DefaultRouter()
 default_router.register('api/location', LocationViewSet, 'location')
@@ -30,4 +31,7 @@ default_router.register('api/booking', BookingViewSet, 'booking')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('api/user/register/', UserRegisterView.as_view(), name='user_register'),
+    path('api/user/login/', UserLoginView.as_view(), name='user_login'),
+    path('api/user/logout/', UserLogoutView.as_view(), name='user_logout'),
 ] + default_router.urls

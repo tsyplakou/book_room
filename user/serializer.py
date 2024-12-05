@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import User
+from .models import ClientUser, User
 from django.contrib.auth import authenticate
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.authtoken.models import Token
@@ -7,7 +7,7 @@ from rest_framework.authtoken.models import Token
 
 class UserLoginSerializer(serializers.ModelSerializer):
     username = serializers.CharField(write_only=True)
-    password = serializers.CharField(write_only = True, min_length = 8)
+    password = serializers.CharField(write_only=True, min_length=8)
 
     class Meta:
         model = User
@@ -15,6 +15,7 @@ class UserLoginSerializer(serializers.ModelSerializer):
             'username',
             'password',
         )
+
     def validate(self, data):
         user = authenticate(username=data['username'], password=data['password'])
         if user is None:
@@ -32,18 +33,21 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
     password1 = serializers.CharField(write_only=True, min_length=8)
 
     class Meta:
-        model = User 
-        fields =(
+        model = ClientUser
+        fields = (
             'username', 
             'password', 
             'password1',
         )
-    def create(self,validated_data):
+
+    def create(self, validated_data):
         password = validated_data['password']
         password1 = validated_data['password1']
         if password != password1:
             raise serializers.ValidationError({"password": "The two password fields must match."})   
         user = User.objects.create_user(
-        username=validated_data['username'],
-        password=password)
+            username=validated_data['username'],
+            password=password,
+            role=User.Role.CLIENT,
+        )
         return user

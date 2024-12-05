@@ -146,7 +146,9 @@ REST_FRAMEWORK = {
     'DATE_FORMAT': 'iso-8601',
     'DATETIME_FORMAT': 'iso-8601',
     'COERCE_DECIMAL_TO_STRING': True,
-    'DEFAULT_AUTHENTICATION_CLASSES': (),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
+    ),
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
     ),

@@ -9,7 +9,7 @@ from .models import Booking
 class BookingSerializer(serializers.ModelSerializer):
 
     def validate(self, attrs):
-        if attrs['start_dt'] < attrs['end_dt'] + timedelta(hours=1):
+        if attrs['start_dt'] + timedelta(hours=1) > attrs['end_dt']:
             raise serializers.ValidationError('Minimal rental time is 1 hour.')
 
         if Booking.objects.filter(
@@ -27,6 +27,7 @@ class BookingSerializer(serializers.ModelSerializer):
                 'Room is already booked during this time.'
             )
 
+        attrs['client'] = self.context['request'].user
         return attrs
 
     class Meta:
