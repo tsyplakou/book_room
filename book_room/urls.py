@@ -20,9 +20,11 @@ from django.urls import path
 from rest_framework.routers import DefaultRouter
 
 from location.views import LocationViewSet
+from room.views import RoomViewSet
 
 default_router = DefaultRouter()
 default_router.register('api/location', LocationViewSet, 'location')
+default_router.register('api/room', RoomViewSet, 'room')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
