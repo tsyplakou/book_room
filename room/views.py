@@ -1,8 +1,10 @@
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets
 
 from book_room.cache import CacheManager, _24_HOURS
 from book_room.permissions import AdminOrClientReadOnlyPermission
 from .models import Room
+from .filters import RoomFilter
 from .serializers import (
     RoomSerializer,
     RoomListSerializer,
@@ -13,9 +15,11 @@ from .serializers import (
 class RoomViewSet(viewsets.ModelViewSet):
     queryset = Room.objects.select_related('location')
     serializer_class = RoomSerializer
-    permission_classes = (
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = RoomFilter
+    permission_classes = [
         AdminOrClientReadOnlyPermission,
-    )
+    ]
 
     def get_queryset(self):
         if queryset := CacheManager().get('room_view_queryset'):
