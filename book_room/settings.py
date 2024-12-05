@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'user',
     'room',
     'room_booking',
+    'location',
     # third-party apps
     'rest_framework',
     'django_filters',
