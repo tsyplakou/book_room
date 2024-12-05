@@ -21,10 +21,12 @@ from rest_framework.routers import DefaultRouter
 
 from location.views import LocationViewSet
 from room.views import RoomViewSet
+from room_booking.views import BookingViewSet
 
 default_router = DefaultRouter()
 default_router.register('api/location', LocationViewSet, 'location')
 default_router.register('api/room', RoomViewSet, 'room')
+default_router.register('api/booking', BookingViewSet, 'booking')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
