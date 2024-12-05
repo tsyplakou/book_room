@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     # third-party apps
     'rest_framework',
     'django_filters',
+    'rest_framework.authtoken',
 ]
 
 MIDDLEWARE = [
@@ -145,9 +146,9 @@ REST_FRAMEWORK = {
     'DATETIME_FORMAT': 'iso-8601',
     'COERCE_DECIMAL_TO_STRING': True,
     'DEFAULT_AUTHENTICATION_CLASSES': (),
-    'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.IsAuthenticated',
-    ),
+    # 'DEFAULT_PERMISSION_CLASSES': (
+    #     #'rest_framework.permissions.IsAuthenticated',
+    # ),
     'DEFAULT_FILTER_BACKENDS': (
         'rest_framework.filters.OrderingFilter',
         'rest_framework.filters.SearchFilter',
