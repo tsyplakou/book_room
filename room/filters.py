@@ -7,10 +7,10 @@ class RoomFilter(django_filters.FilterSet):
         field_name="name", lookup_expr="icontains", label="Room Name"
     )
     location_country = django_filters.CharFilter(
-        field_name="location__country", lookup_expr="icontains", label="Country"
+        field_name="location_country", lookup_expr="icontains", label="Country"
     )
     location_city = django_filters.CharFilter(
-        field_name="location__city", lookup_expr="icontains", label="City"
+        field_name="location_city", lookup_expr="icontains", label="City"
     )
     capacity = django_filters.NumberFilter(
         field_name="capacity", lookup_expr="gte", label="Minimum Capacity"

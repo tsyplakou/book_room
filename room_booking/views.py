@@ -1,11 +1,15 @@
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets, exceptions
 
+from .filters import BookingFilter
 from .models import Booking
 from .serializers import BookingSerializer
 
 
 class BookingViewSet(viewsets.ModelViewSet):
     queryset = Booking.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = BookingFilter
     serializer_class = BookingSerializer
 
     def get_queryset(self):
