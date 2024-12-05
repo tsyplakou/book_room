@@ -43,9 +43,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         password1 = validated_data['password1']
         if password != password1:
             raise serializers.ValidationError({"password": "The two password fields must match."})   
-                
         user = User.objects.create_user(
-            username=validated_data['username'],
-            password=password
-        )    
+        username=validated_data['username'],
+        password=password)
         return user
