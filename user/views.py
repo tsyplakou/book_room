@@ -1,9 +1,9 @@
-from rest_framework.generics import GenericAPIView
-from .serializer import *
-from rest_framework.response import Response
-from rest_framework import status
-from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth import logout
+from rest_framework import status
+from rest_framework.generics import GenericAPIView
+from rest_framework.response import Response
+
+from .serializer import *
 
 
 class UserLogoutView(GenericAPIView):
@@ -13,18 +13,19 @@ class UserLogoutView(GenericAPIView):
             {"message": "logout"},
             status=status.HTTP_200_OK,
         )
-    
+
 
 class UserLoginView(GenericAPIView):
     permission_classes = ()
+    serializer_class = UserLoginSerializer
 
     def post(self, request):
-        serializer = UserLoginSerializer(data=request.data)
+        serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
             token = serializer.save()
             return Response({'token': token}, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
+
 
 class UserRegisterView(GenericAPIView):
     queryset = User.objects.all()
@@ -32,7 +33,7 @@ class UserRegisterView(GenericAPIView):
     permission_classes = []
 
     def post(self, request):
-        serializer = UserRegistrationSerializer(data=request.data)
+        serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response({"message": "User registered successfully"}, status=status.HTTP_201_CREATED)
