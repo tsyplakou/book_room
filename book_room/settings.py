@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'django_filters',
     'rest_framework.authtoken',
     'drf_yasg',
+    # 'django_celery_results',
 ]
 
 MIDDLEWARE = [
@@ -171,9 +172,10 @@ REST_FRAMEWORK = {
 
 
 CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
-        'LOCATION': os.path.join(BASE_DIR, 'cache'),
+    "default": {
+        "BACKEND": "django.core.cache.backends.redis.RedisCache",
+        "KEY_PREFIX": "book_room:",
+        "LOCATION": "redis://127.0.0.1:6379",
     },
 }
 
@@ -197,3 +199,12 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = os.environ['EMAIL_HOST_USER']
 EMAIL_HOST_PASSWORD = os.environ['EMAIL_HOST_PASSWORD']
+
+# Указываем брокер сообщений
+CELERY_BROKER_URL = 'redis://localhost:6379/'
+# Указываем бэкенд для результатов (необязательно)
+CELERY_RESULT_BACKEND = 'redis://localhost:6379/'
+# Настройка времени
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'UTC'

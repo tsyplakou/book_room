@@ -1,16 +1,15 @@
 from datetime import datetime, timedelta
-from django.core.mail import send_mail
 
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import get_object_or_404
 from rest_framework import viewsets, exceptions
-from rest_framework.response import Response
 from rest_framework.decorators import action
-from django.conf import settings
+from rest_framework.response import Response
 
 from room.models import Room
 from .filters import BookingFilter
 from .models import Booking
 from .serializers import BookingSerializer
+from .tasks import send_booking_confirmation
 
 
 ROOM_OPENING_TIME = 9
@@ -74,14 +73,20 @@ class BookingViewSet(viewsets.ModelViewSet):
     )
     def send_confirmation_mail(self, request, pk):
         booking = self.get_object()
-
-        send_mail(
-            subject='Booking Confirmation',
-            message='',
-            from_email=settings.EMAIL_HOST_USER,
-            recipient_list=[booking.client.email],
-            html_message='{} / {} / {}'.format(
-                booking.room.name, booking.start_dt, booking.end_dt
-            ),
+        send_booking_confirmation.delay(
+            booking.room.name,
+            booking.start_dt,
+            booking.end_dt,
+        )
+        # send_booking_confirmation.apply_async(  # countdown, eta, priority.
+        #     args=(booking.room.name, booking.start_dt, booking.end_dt,),
+        # )
+        # send_booking_confirmation.apply(
+        #     args=(booking.room.name, booking.start_dt, booking.end_dt,),
+        # )
+        from book_room import celery_app
+        celery_app.send_task(
+            'room_booking.tasks.send_booking_confirmation',
+            args=(booking.room.name, booking.start_dt, booking.end_dt,),
         )
         return Response()
